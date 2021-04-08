@@ -38,7 +38,6 @@ def writeCategoriesToDB():
         cursor = connection.cursor()
 
         sql = "Insert into categories (id, name) " + " values (%s, %s) "
-
         for category in categories['values']:
             id = category['id']
             name = category['name']
