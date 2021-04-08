@@ -1,0 +1,20 @@
+{%extends 'base.html'%}
+
+{%block title%}
+События
+{%endblock%}
+
+{%block body%}
+<div class="container mt-5">
+<h1>Отметить интересные события</h1>
+
+{% for event in events %}
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+  <label class="form-check-label" for="flexCheckIndeterminate">
+    {{ event['name'] }}
+</label>
+</div>
+{% endfor %}
+</div>
+{%endblock%}
