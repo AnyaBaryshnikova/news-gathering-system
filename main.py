@@ -1,11 +1,14 @@
 import recomendations
 import data
+from datetime import datetime
 
 
 
 if __name__ == '__main__':
     #recomendations.makeRecommendation('Ivan', data.ReadFile('data/ratings.csv'))
-    data.writeCategoriesToDB()
+
+    #data.writeEventsToDB()
+    data.deleteduplicates()
 
 
 

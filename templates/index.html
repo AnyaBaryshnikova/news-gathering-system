@@ -6,15 +6,28 @@
 
 {%block body%}
 <div class="container mt-5">
-<h1>Отметить интересные события</h1>
+  <div class="alert alert-secondary" role="alert">
+    <h6>получить события выбранной категории, которые начинаются с текущей даты <span class="badge bg-light text-dark">/cats/Название категории</span></h6>
+    <h6>получить события выбранной категории, которые начинаются с выбранной даты <span class="badge bg-light text-dark">/cats/Название категории/Дата(YYYY-MM-DD)</span></h6>
+    <h6>получить все события, которые начинаются с текущей даты <span class="badge bg-light text-dark">/events</span></h6>
+    <h6>получить все события, которые начинаются с выбранной даты даты <span class="badge bg-light text-dark">/events/Дата(YYYY-MM-DD)</span></h6>
+  </div>
 
-{% for event in events %}
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-  <label class="form-check-label" for="flexCheckIndeterminate">
-    {{ event['name'] }}
-</label>
-</div>
-{% endfor %}
+  <div class="alert alert-secondary" role="alert">
+    <h2>Примеры</h2>
+    <p>/cats/Бизнес</p>
+    <p>/cats/Для детей</p>
+    <p>/cats/Кино/2020-10-15</p>
+    <p>/events</p>
+    <p>/events/2020-06-19</p>
+  </div>
+
+  <div class="alert alert-secondary" role="alert">
+    <h2>Список категорий:</h2>
+
+    {% for category in categories %}
+    <p>{{ category['name'] }}</p>
+    {% endfor %}
+  </div>
 </div>
 {%endblock%}
