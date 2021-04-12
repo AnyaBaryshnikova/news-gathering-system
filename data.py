@@ -34,19 +34,6 @@ def writeEventsToDB():
     finally:
         connection.close()
 
-
-def deleteduplicates():
-    connection = getConnection()
-    cursor = connection.cursor()
-    sql = "SELECT * FROM events WHERE name IN (SELECT name FROM events GROUP BY name HAVING COUNT(*) > 1) AND name IN (SELECT startsat FROM events GROUP BY startsat HAVING COUNT(*) > 1)"
-    try:
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        connection.commit()
-    finally:
-        connection.close()
-
-
 def writeCategoriesToDB():
     categories = getData('https://api.timepad.ru/v1/dictionary/event_categories.json')
     connection = getConnection()
