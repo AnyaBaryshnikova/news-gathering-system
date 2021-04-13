@@ -1,9 +1,10 @@
 import flask
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 import data
 from flask_restful import reqparse, abort, Api, Resource
 import json
 from datetime import datetime
+import recommendations
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -20,6 +21,38 @@ def index():
     finally:
         connection.close()
     return render_template("index.html", categories = categories)
+
+
+@app.route('/recomendations', methods=['GET', 'POST'])
+def recomendations():
+    events = recommendations.createRandEvents()
+    if request.method == 'POST':
+        recEvents = request.form.getlist('eventchecked')
+        return redirect(url_for('getrecomendations', recEvents = recEvents))
+    return render_template("recomendations.html", events = events)
+
+
+@app.route('/getrecomendations', methods=['GET', 'POST'])
+def createRecomendations():
+    recEvents = request.args['recEvents']
+    listedEvents = []
+
+    connection = data.getConnection()
+
+    try:
+        cursor = connection.cursor()
+        for recEvent in recEvents:
+            recs = recommendations.returnRecommendations(recEvent)
+            for rec in recs:
+                sql = "SELECT name, url FROM events WHERE id = '" + str(rec[1]) + "'"
+                cursor.execute(sql)
+                ev = cursor.fetchall()
+                listedEvents.append(ev[0])
+    finally:
+        connection.close()
+    return render_template("getrecomendations.html", listedEvents = listedEvents)
+
+
 
 
 class Categories(Resource):

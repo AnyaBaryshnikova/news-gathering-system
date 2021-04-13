@@ -5,5 +5,14 @@
 {%endblock%}
 
 {%block body%}
-<h2>Рекомендации, основанные на выборах пользователя</h2>
+<div class="container mt-5">
+<h2>Выбрать интересующие события:</h2>
+
+<form method="POST" action="/recomendations">
+    {% for event in events %}
+    <input type="checkbox" value="{{event['id']}}" name="eventchecked"> {{event['name']}} <br/>
+    {% endfor %}
+    <input type="submit">
+</form>
+</div>
 {%endblock%}

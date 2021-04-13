@@ -6,11 +6,10 @@ import datetime
 
 
 def writeEventsToDB():
-    #events = getData('https://api.timepad.ru/v1/events?limit=100&sort=%2Bid&access_statuses=public&moderation_statuses=featured%2Cshown%2Cnot_moderated&starts_at_min=01.01.2021')
     connection = getConnection()
     cursor = connection.cursor()
 
-    sql = "Insert into events (id, name, categoryid, startsat) " + " values (%s, %s, %s, %s) " + "ON DUPLICATE KEY UPDATE startsat = %s"
+    sql = "Insert into events (id, name, categoryid, startsat, url) " + " values (%s, %s, %s, %s, %s) " + "ON DUPLICATE KEY UPDATE startsat = %s"
 
     events = getData('https://api.timepad.ru/v1/events?limit=10&skip=10&sort=%2Bid&access_statuses=public&moderation_statuses=featured%2Cshown%2Cnot_moderated')
     total = events['total']
@@ -24,12 +23,13 @@ def writeEventsToDB():
                 id = event['id']
                 name = event['name']
                 startsat = event['starts_at']
+                url = event['url']
                 startsat = startsat[:10]            #строка yyyy-mm-dd
                 startsat = datetime.datetime.strptime(startsat, "%Y-%m-%d").date()
                 categoryId = 0
                 if len(event['categories']) > 0:
                     categoryId = event['categories'][0]['id']
-                cursor.execute(sql, (id, name, categoryId, startsat, startsat))
+                cursor.execute(sql, (id, name, categoryId, startsat, url, startsat))
             connection.commit()
     finally:
         connection.close()
