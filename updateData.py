@@ -1,5 +1,5 @@
 import data
-import recomendations
+import recommendations
 
 
 if __name__ == '__main__':

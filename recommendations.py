@@ -26,6 +26,7 @@ def recomends():
 def returnRecommendations(itemID):
     results = recomends()
     recs = results[itemID][:3]
+    return recs
 
 
 def createDataSet():

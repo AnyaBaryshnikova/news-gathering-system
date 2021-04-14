@@ -1,5 +1,6 @@
 import flask
 from flask import Flask, render_template, request, redirect, url_for
+
 import data
 from flask_restful import reqparse, abort, Api, Resource
 import json
@@ -28,26 +29,30 @@ def recomendations():
     events = recommendations.createRandEvents()
     if request.method == 'POST':
         recEvents = request.form.getlist('eventchecked')
-        return redirect(url_for('getrecomendations', recEvents = recEvents))
+        strEvents = ''
+        for rec in recEvents:
+            strEvents += str(rec) + ' '
+        return redirect(url_for("createRecomendations", strEvents = strEvents))
     return render_template("recomendations.html", events = events)
 
 
-@app.route('/getrecomendations', methods=['GET', 'POST'])
-def createRecomendations():
-    recEvents = request.args['recEvents']
+@app.route("/getrecomendations/<strEvents>", methods=['GET', 'POST'])
+def createRecomendations(strEvents):
+    strEvents = strEvents.replace(' ', ',')
+    recEvents = strEvents.split(",")
     listedEvents = []
-
     connection = data.getConnection()
 
     try:
         cursor = connection.cursor()
         for recEvent in recEvents:
-            recs = recommendations.returnRecommendations(recEvent)
-            for rec in recs:
-                sql = "SELECT name, url FROM events WHERE id = '" + str(rec[1]) + "'"
-                cursor.execute(sql)
-                ev = cursor.fetchall()
-                listedEvents.append(ev[0])
+            if recEvent != '':
+                recs = recommendations.returnRecommendations((int(recEvent)))
+                for rec in recs:
+                    sql = "SELECT name, url FROM events WHERE id = '" + str(rec[1]) + "'"
+                    cursor.execute(sql)
+                    ev = cursor.fetchall()
+                    listedEvents.append(ev[0])
     finally:
         connection.close()
     return render_template("getrecomendations.html", listedEvents = listedEvents)
